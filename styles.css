@@ -367,6 +367,14 @@ canvas {
     .section-title {
         font-size: 1.3rem;
     }
+    
+    /* Modal 響應式調整 */
+    .modal-content {
+        width: 95vw;
+        min-width: unset;
+        max-height: 85vh;
+        padding: 25px 20px 20px 20px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -385,6 +393,167 @@ canvas {
     
     .card-icon i, .transformation-icon i {
         font-size: 1.2rem;
+    }
+    
+    /* 手機版 Modal 優化 */
+    .modal {
+        /* 確保在手機上全屏顯示 */
+        width: 100vw;
+        height: 100vh;
+    }
+    
+    .modal-overlay {
+        /* 手機上使用更大的遮罩範圍 */
+        left: -50px;
+        top: -50px;
+        right: -50px;
+        bottom: -50px;
+        width: calc(100vw + 100px);
+        height: calc(100vh + 100px);
+        /* 手機上使用更深的遮罩 */
+        background: rgba(44, 62, 80, 0.6);
+    }
+    
+    .modal-content {
+        /* 手機上使用全屏寬度，但高度調整為 90vh 留出一些空間 */
+        width: 100vw;
+        height: 90vh;
+        max-width: 100vw;
+        max-height: 90vh;
+        min-width: unset;
+        padding: 20px 15px 15px 15px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateY(20vh) scale(0.95);
+        border-radius: 0;
+        /* 手機上使用更快的動畫 */
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        /* 手機上添加滾動 */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        /* 手機上添加更好的陰影 */
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .modal.show .modal-content {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 -2px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .modal-title {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        padding-right: 40px; /* 為關閉按鈕留空間 */
+        line-height: 1.3;
+    }
+    
+    .modal-close {
+        /* 手機上更大的關閉按鈕 */
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.8rem;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        z-index: 15;
+    }
+    
+    .modal-chart-container {
+        height: 180px;
+        margin-bottom: 20px;
+    }
+    
+    /* 手機上優化狀態顯示 */
+    .moisture-status-row,
+    .light-efficiency-status,
+    .co2-concentration-status {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+    
+    .moisture-status,
+    .light-efficiency,
+    .co2-status {
+        margin-left: 0;
+        margin-top: 4px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    /* 手機上優化提示框 */
+    .irrigation-tip,
+    .temperature-warning,
+    .temperature-tip,
+    .light-tip,
+    .co2-note {
+        font-size: 0.95rem;
+        padding: 10px;
+        margin-bottom: 12px;
+        line-height: 1.4;
+        border-radius: 6px;
+    }
+    
+    /* 手機上添加滑動關閉功能 */
+    .modal-content::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 2px;
+        z-index: 10;
+    }
+}
+
+/* 添加手機專用的觸控優化 */
+@media (max-width: 480px) and (hover: none) {
+    .modal-close {
+        /* 手機上增加觸控區域 */
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .modal-content {
+        /* 手機上防止文字選擇 */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+}
+
+/* 橫屏手機優化 */
+@media (max-width: 480px) and (orientation: landscape) {
+    .modal-content {
+        height: 85vh;
+        padding: 15px 20px 15px 20px;
+        transform: translateY(15vh) scale(0.95);
+    }
+    
+    .modal.show .modal-content {
+        transform: translateY(0) scale(1);
+    }
+    
+    .modal-title {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .modal-chart-container {
+        height: 150px;
+        margin-bottom: 15px;
     }
 }
 
@@ -417,7 +586,7 @@ canvas {
 /* Modal 樣式 */
 .modal {
     display: none;
-    position: fixed;
+    position: absolute;
     z-index: 99999;
     left: 0;
     top: 0;
@@ -433,7 +602,7 @@ canvas {
     opacity: 1;
 }
 .modal-overlay {
-    position: fixed;
+    position: absolute;
     left: -200px; 
     top: -200px; 
     right: -200px; 
@@ -449,9 +618,9 @@ canvas {
     opacity: 1;
 }
 .modal-content {
-    position: fixed;
+    position: absolute;
     left: 50%;
-    top: 80%;
+    top: 50%;
     transform: translate(-50%, -50%) scale(0.8);
     background: #fff;
     border-radius: 16px;
@@ -460,6 +629,8 @@ canvas {
     min-width: 500px;
     max-width: 95vw;
     width: 1000px;
+    max-height: 90vh;
+    overflow-y: auto;
     z-index: 2;
     opacity: 0;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

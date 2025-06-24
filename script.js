@@ -16,11 +16,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // 添加卡片點擊效果
         addCardInteractions();
         
-        // Modal 初始化
-        initSoilMoistureModal();
-        initTemperatureModal();
-        initLightModal();
-        initCO2Modal();
+        // 添加平滑滾動
+        addSmoothScrolling();
+        
+        // 添加視窗大小變化處理
+        window.addEventListener('resize', handleResize);
+        
+        // Modal 初始化（移到最後，確保所有函數都已定義）
+        setTimeout(() => {
+            initSoilMoistureModal();
+            initTemperatureModal();
+            initLightModal();
+            initCO2Modal();
+        }, 0);
     } catch (error) {
         console.error('初始化錯誤:', error);
         showErrorMessage('系統初始化失敗，請重新整理頁面');
@@ -255,7 +263,7 @@ function updateStatusIndicators(soilMoisture, temperature, light, co2) {
     }
 }
 
-// 添加卡片互動效果
+// 添加卡片點擊效果
 function addCardInteractions() {
     const cards = document.querySelectorAll('.card, .transformation-card');
     
@@ -268,96 +276,181 @@ function addCardInteractions() {
                 // 不執行任何點擊動作
             }
         });
-    });
-}
-
-// 添加平滑滾動效果
-function addSmoothScrolling() {
-    const sections = document.querySelectorAll('section');
-    
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
+        
+        // 添加點擊位置記錄
+        card.addEventListener('click', function(e) {
+            // 記錄點擊位置，用於 modal 定位
+            window.lastClickPosition = {
+                x: e.clientX,
+                y: e.clientY
+            };
         });
-    }, observerOptions);
-    
-    sections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(30px)';
-        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(section);
     });
 }
 
-// 添加響應式圖表調整
-function handleResize() {
-    const chartContainer = document.querySelector('.chart-container');
-    const chart = document.getElementById('temperatureChart');
+// 輔助函數：禁止背景滾動
+function disableBodyScroll() {
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.top = `-${window.scrollY}px`;
+}
+
+// 輔助函數：恢復背景滾動
+function enableBodyScroll() {
+    const scrollY = document.body.style.top;
+    document.body.style.position = '';
+    document.body.style.width = '';
+    document.body.style.top = '';
+    document.body.style.overflow = '';
     
-    if (window.innerWidth <= 768) {
-        chartContainer.style.padding = '20px';
-        if (chart && chart.chart) {
-            chart.chart.resize();
-        }
-    } else {
-        chartContainer.style.padding = '30px';
-        if (chart && chart.chart) {
-            chart.chart.resize();
-        }
+    // 恢復滾動位置
+    if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
     }
 }
 
-// 監聽視窗大小變化
-window.addEventListener('resize', handleResize);
+// 動態調整 modal 位置
+function adjustModalPosition(modalContent) {
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    const scrollY = window.scrollY || window.pageYOffset;
+    const scrollX = window.scrollX || window.pageXOffset;
+    
+    // 檢查是否為手機設備
+    const isMobile = window.innerWidth <= 480;
+    
+    if (isMobile) {
+        // 手機上使用全屏顯示，顯示在螢幕上方 20% 的位置
+        modalContent.style.top = '0';
+        modalContent.style.left = '0';
+        modalContent.style.transform = 'translateY(1vh) scale(0.95)';
+        return;
+    }
+    
+    // 桌面版的位置調整邏輯
+    // 重置 modal 位置到預設狀態
+    modalContent.style.top = '50%';
+    modalContent.style.left = '50%';
+    modalContent.style.transform = 'translate(-50%, -50%) scale(0.8)';
+    
+    // 強制重繪以獲取實際尺寸
+    modalContent.offsetHeight;
+    
+    const modalHeight = modalContent.offsetHeight;
+    const modalWidth = modalContent.offsetWidth;
+    
+    // 計算 modal 在視窗中的實際位置
+    const modalTop = (viewportHeight - modalHeight) / 2;
+    const modalLeft = (viewportWidth - modalWidth) / 2;
+    
+    // 確保 modal 不會超出視窗邊界
+    let finalTop = Math.max(20, Math.min(modalTop, viewportHeight - modalHeight - 20));
+    let finalLeft = Math.max(20, Math.min(modalLeft, viewportWidth - modalWidth - 20));
+    
+    // 如果有記錄點擊位置，嘗試讓 modal 出現在點擊位置附近
+    if (window.lastClickPosition) {
+        const clickY = window.lastClickPosition.y;
+        const clickX = window.lastClickPosition.x;
+        
+        // 計算相對於視窗的位置（考慮滾動）
+        const relativeClickY = clickY - scrollY;
+        const relativeClickX = clickX - scrollX;
+        
+        // 嘗試將 modal 定位在點擊位置附近
+        let targetTop = relativeClickY - (modalHeight / 2);
+        let targetLeft = relativeClickX - (modalWidth / 2);
+        
+        // 確保不超出視窗邊界
+        targetTop = Math.max(20, Math.min(targetTop, viewportHeight - modalHeight - 20));
+        targetLeft = Math.max(20, Math.min(targetLeft, viewportWidth - modalWidth - 20));
+        
+        // 如果點擊位置合理，使用它；否則使用居中位置
+        if (relativeClickY >= 0 && relativeClickY <= viewportHeight) {
+            finalTop = targetTop;
+        }
+        if (relativeClickX >= 0 && relativeClickX <= viewportWidth) {
+            finalLeft = targetLeft;
+        }
+    }
+    
+    // 應用位置調整（使用像素值而不是百分比）
+    modalContent.style.top = finalTop + 'px';
+    modalContent.style.left = finalLeft + 'px';
+    modalContent.style.transform = 'scale(0.8)';
+}
 
-// 頁面載入完成後初始化所有功能
-window.addEventListener('load', function() {
-    addSmoothScrolling();
-    handleResize();
+// 添加手機專用的滑動關閉功能
+function addMobileSwipeToClose(modal, closeFunction) {
+    const modalContent = modal.querySelector('.modal-content');
+    let startY = 0;
+    let currentY = 0;
+    let isDragging = false;
     
-    // 添加載入動畫
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.5s ease';
+    // 防止背景滾動
+    const preventScroll = (e) => {
+        e.preventDefault();
+    };
     
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-    }, 100);
-});
-
-// 添加錯誤處理
-window.addEventListener('error', function(e) {
-    console.error('Dashboard 錯誤:', e.error);
+    // 觸控開始
+    const handleTouchStart = (e) => {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+        modalContent.style.transition = 'none';
+        
+        // 防止背景滾動
+        document.body.addEventListener('touchmove', preventScroll, { passive: false });
+    };
     
-    // 顯示用戶友好的錯誤訊息
-    const errorDiv = document.createElement('div');
-    errorDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #f44336;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 1000;
-        font-size: 14px;
-    `;
-    errorDiv.textContent = '系統暫時無法載入數據，請稍後再試';
+    // 觸控移動
+    const handleTouchMove = (e) => {
+        if (!isDragging) return;
+        
+        currentY = e.touches[0].clientY;
+        const deltaY = currentY - startY;
+        
+        // 只允許向下滑動
+        if (deltaY > 0) {
+            const translateY = Math.min(deltaY, 300); // 增加最大滑動距離
+            const scale = 1 - (translateY / 1500); // 調整縮放效果
+            modalContent.style.transform = `translateY(${translateY}px) scale(${scale})`;
+        }
+    };
     
-    document.body.appendChild(errorDiv);
+    // 觸控結束
+    const handleTouchEnd = (e) => {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        modalContent.style.transition = 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)';
+        
+        // 移除防止滾動
+        document.body.removeEventListener('touchmove', preventScroll);
+        
+        const deltaY = currentY - startY;
+        
+        // 如果滑動距離超過閾值，關閉 modal
+        if (deltaY > 150) {
+            closeFunction();
+        } else {
+            // 恢復原位置
+            modalContent.style.transform = 'translateY(0) scale(1)';
+        }
+    };
     
-    setTimeout(() => {
-        errorDiv.remove();
-    }, 5000);
-});
+    // 添加事件監聽器
+    modalContent.addEventListener('touchstart', handleTouchStart, { passive: false });
+    modalContent.addEventListener('touchmove', handleTouchMove, { passive: false });
+    modalContent.addEventListener('touchend', handleTouchEnd, { passive: false });
+    
+    // 返回清理函數
+    return () => {
+        modalContent.removeEventListener('touchstart', handleTouchStart);
+        modalContent.removeEventListener('touchmove', handleTouchMove);
+        modalContent.removeEventListener('touchend', handleTouchEnd);
+        document.body.removeEventListener('touchmove', preventScroll);
+    };
+}
 
 // Modal 控制與土壤濕度圖表
 let soilMoistureChartInstance = null;
@@ -413,14 +506,37 @@ function initSoilMoistureModal() {
 
 function showSoilModal() {
     const modal = document.getElementById('soil-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    
+    // 確保 modal 在 body 中
+    if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+    }
+    
     modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    
+    // 完全禁止背景滾動
+    disableBodyScroll();
+    
+    // 調整 modal 位置
+    adjustModalPosition(modalContent);
     
     // 隱藏折線圖區塊和轉型預估區塊
     const chartSection = document.querySelector('.chart-section');
     const transformationSection = document.querySelector('.transformation-section');
     if (chartSection) chartSection.style.display = 'none';
     if (transformationSection) transformationSection.style.display = 'none';
+    
+    // 手機上添加滑動關閉功能
+    const isMobile = window.innerWidth <= 480;
+    if (isMobile) {
+        // 清除之前的滑動關閉功能
+        if (modal.swipeCleanup) {
+            modal.swipeCleanup();
+        }
+        // 添加新的滑動關閉功能
+        modal.swipeCleanup = addMobileSwipeToClose(modal, hideSoilModal);
+    }
     
     // 延遲初始化圖表，等待動畫完成
     setTimeout(() => {
@@ -433,9 +549,16 @@ function hideSoilModal() {
     const modal = document.getElementById('soil-modal');
     modal.classList.remove('show');
     
+    // 清理滑動關閉功能
+    if (modal.swipeCleanup) {
+        modal.swipeCleanup();
+        modal.swipeCleanup = null;
+    }
+    
     // 延遲恢復滾動和顯示其他區塊
     setTimeout(() => {
-        document.body.style.overflow = '';
+        // 恢復背景滾動
+        enableBodyScroll();
         
         // 恢復顯示折線圖區塊和轉型預估區塊
         const chartSection = document.querySelector('.chart-section');
@@ -604,14 +727,37 @@ function initTemperatureModal() {
 
 function showTemperatureModal() {
     const modal = document.getElementById('temperature-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    
+    // 確保 modal 在 body 中
+    if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+    }
+    
     modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    
+    // 完全禁止背景滾動
+    disableBodyScroll();
+    
+    // 調整 modal 位置
+    adjustModalPosition(modalContent);
     
     // 隱藏折線圖區塊和轉型預估區塊
     const chartSection = document.querySelector('.chart-section');
     const transformationSection = document.querySelector('.transformation-section');
     if (chartSection) chartSection.style.display = 'none';
     if (transformationSection) transformationSection.style.display = 'none';
+    
+    // 手機上添加滑動關閉功能
+    const isMobile = window.innerWidth <= 480;
+    if (isMobile) {
+        // 清除之前的滑動關閉功能
+        if (modal.swipeCleanup) {
+            modal.swipeCleanup();
+        }
+        // 添加新的滑動關閉功能
+        modal.swipeCleanup = addMobileSwipeToClose(modal, hideTemperatureModal);
+    }
     
     // 延遲初始化圖表，等待動畫完成
     setTimeout(() => {
@@ -623,9 +769,16 @@ function hideTemperatureModal() {
     const modal = document.getElementById('temperature-modal');
     modal.classList.remove('show');
     
+    // 清理滑動關閉功能
+    if (modal.swipeCleanup) {
+        modal.swipeCleanup();
+        modal.swipeCleanup = null;
+    }
+    
     // 延遲恢復滾動和顯示其他區塊
     setTimeout(() => {
-        document.body.style.overflow = '';
+        // 恢復背景滾動
+        enableBodyScroll();
         
         // 恢復顯示折線圖區塊和轉型預估區塊
         const chartSection = document.querySelector('.chart-section');
@@ -775,14 +928,37 @@ function initLightModal() {
 
 function showLightModal() {
     const modal = document.getElementById('light-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    
+    // 確保 modal 在 body 中
+    if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+    }
+    
     modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    
+    // 完全禁止背景滾動
+    disableBodyScroll();
+    
+    // 調整 modal 位置
+    adjustModalPosition(modalContent);
     
     // 隱藏折線圖區塊和轉型預估區塊
     const chartSection = document.querySelector('.chart-section');
     const transformationSection = document.querySelector('.transformation-section');
     if (chartSection) chartSection.style.display = 'none';
     if (transformationSection) transformationSection.style.display = 'none';
+    
+    // 手機上添加滑動關閉功能
+    const isMobile = window.innerWidth <= 480;
+    if (isMobile) {
+        // 清除之前的滑動關閉功能
+        if (modal.swipeCleanup) {
+            modal.swipeCleanup();
+        }
+        // 添加新的滑動關閉功能
+        modal.swipeCleanup = addMobileSwipeToClose(modal, hideLightModal);
+    }
     
     // 延遲初始化圖表，等待動畫完成
     setTimeout(() => {
@@ -795,9 +971,16 @@ function hideLightModal() {
     const modal = document.getElementById('light-modal');
     modal.classList.remove('show');
     
+    // 清理滑動關閉功能
+    if (modal.swipeCleanup) {
+        modal.swipeCleanup();
+        modal.swipeCleanup = null;
+    }
+    
     // 延遲恢復滾動和顯示其他區塊
     setTimeout(() => {
-        document.body.style.overflow = '';
+        // 恢復背景滾動
+        enableBodyScroll();
         
         // 恢復顯示折線圖區塊和轉型預估區塊
         const chartSection = document.querySelector('.chart-section');
@@ -970,14 +1153,37 @@ function initCO2Modal() {
 
 function showCO2Modal() {
     const modal = document.getElementById('co2-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    
+    // 確保 modal 在 body 中
+    if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+    }
+    
     modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    
+    // 完全禁止背景滾動
+    disableBodyScroll();
+    
+    // 調整 modal 位置
+    adjustModalPosition(modalContent);
     
     // 隱藏折線圖區塊和轉型預估區塊
     const chartSection = document.querySelector('.chart-section');
     const transformationSection = document.querySelector('.transformation-section');
     if (chartSection) chartSection.style.display = 'none';
     if (transformationSection) transformationSection.style.display = 'none';
+    
+    // 手機上添加滑動關閉功能
+    const isMobile = window.innerWidth <= 480;
+    if (isMobile) {
+        // 清除之前的滑動關閉功能
+        if (modal.swipeCleanup) {
+            modal.swipeCleanup();
+        }
+        // 添加新的滑動關閉功能
+        modal.swipeCleanup = addMobileSwipeToClose(modal, hideCO2Modal);
+    }
     
     // 延遲初始化圖表，等待動畫完成
     setTimeout(() => {
@@ -990,9 +1196,16 @@ function hideCO2Modal() {
     const modal = document.getElementById('co2-modal');
     modal.classList.remove('show');
     
+    // 清理滑動關閉功能
+    if (modal.swipeCleanup) {
+        modal.swipeCleanup();
+        modal.swipeCleanup = null;
+    }
+    
     // 延遲恢復滾動和顯示其他區塊
     setTimeout(() => {
-        document.body.style.overflow = '';
+        // 恢復背景滾動
+        enableBodyScroll();
         
         // 恢復顯示折線圖區塊和轉型預估區塊
         const chartSection = document.querySelector('.chart-section');
@@ -1113,4 +1326,98 @@ function updateCO2ConcentrationStatus() {
         statusSpan.textContent = '適中';
         statusSpan.className = 'co2-status optimal';
     }
-} 
+}
+
+// 添加平滑滾動效果
+function addSmoothScrolling() {
+    const sections = document.querySelectorAll('section');
+    
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    sections.forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(section);
+    });
+}
+
+// 添加響應式圖表調整
+function handleResize() {
+    const chartContainer = document.querySelector('.chart-container');
+    const chart = document.getElementById('temperatureChart');
+    
+    if (window.innerWidth <= 768) {
+        chartContainer.style.padding = '20px';
+        if (chart && chart.chart) {
+            chart.chart.resize();
+        }
+    } else {
+        chartContainer.style.padding = '30px';
+        if (chart && chart.chart) {
+            chart.chart.resize();
+        }
+    }
+    
+    // 手機旋轉時重新調整 modal 位置
+    const activeModal = document.querySelector('.modal.show');
+    if (activeModal) {
+        const modalContent = activeModal.querySelector('.modal-content');
+        if (modalContent) {
+            adjustModalPosition(modalContent);
+        }
+    }
+}
+
+// 頁面載入完成後初始化所有功能
+window.addEventListener('load', function() {
+    addSmoothScrolling();
+    handleResize();
+    
+    // 添加載入動畫
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease';
+    
+    setTimeout(() => {
+        document.body.style.opacity = '1';
+    }, 100);
+});
+
+// 添加錯誤處理
+window.addEventListener('error', function(e) {
+    console.error('Dashboard 錯誤:', e.error);
+    
+    // 顯示用戶友好的錯誤訊息
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #f44336;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 1000;
+        font-size: 14px;
+    `;
+    errorDiv.textContent = '系統暫時無法載入數據，請稍後再試';
+    
+    document.body.appendChild(errorDiv);
+    
+    setTimeout(() => {
+        errorDiv.remove();
+    }, 5000);
+}); 
