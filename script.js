@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Modal 初始化
         initSoilMoistureModal();
         initTemperatureModal();
+        initLightModal();
+        initCO2Modal();
     } catch (error) {
         console.error('初始化錯誤:', error);
         showErrorMessage('系統初始化失敗，請重新整理頁面');
@@ -360,6 +362,8 @@ window.addEventListener('error', function(e) {
 // Modal 控制與土壤濕度圖表
 let soilMoistureChartInstance = null;
 let temperatureDetailChartInstance = null;
+let lightDistributionChartInstance = null;
+let co2TrendChartInstance = null;
 
 function initSoilMoistureModal() {
     const soilCard = document.querySelector('.overview-cards .card');
@@ -707,5 +711,385 @@ function renderTemperatureDetailChart() {
     } catch (error) {
         console.error('氣溫詳情圖表初始化錯誤:', error);
         showErrorMessage('氣溫詳情圖表載入失敗');
+    }
+}
+
+function initLightModal() {
+    // 使用更精確的選擇器，選擇第三個卡片（光照卡片）
+    const cards = document.querySelectorAll('.overview-cards .card');
+    const lightCard = cards[2]; // 第三個卡片是光照卡片
+    const modal = document.getElementById('light-modal');
+    
+    // 檢查必要元素是否存在
+    if (!lightCard) {
+        console.error('找不到光照卡片元素');
+        return;
+    }
+    
+    if (!modal) {
+        console.error('找不到光照 modal 元素');
+        return;
+    }
+    
+    const overlay = modal.querySelector('.modal-overlay');
+    const closeBtn = document.getElementById('light-modal-close');
+    
+    if (!overlay) {
+        console.error('找不到光照 modal overlay 元素');
+        return;
+    }
+    
+    if (!closeBtn) {
+        console.error('找不到光照 modal 關閉按鈕');
+        return;
+    }
+
+    // 點擊卡片開啟 modal
+    lightCard.addEventListener('click', function(e) {
+        // 避免與卡片動畫衝突
+        setTimeout(() => {
+            showLightModal();
+        }, 120);
+    });
+    // 點擊遮罩或關閉按鈕關閉 modal
+    overlay.addEventListener('click', hideLightModal);
+    closeBtn.addEventListener('click', hideLightModal);
+    // ESC 鍵關閉
+    document.addEventListener('keydown', function(e) {
+        if (modal.classList.contains('show') && (e.key === 'Escape' || e.key === 'Esc')) {
+            hideLightModal();
+        }
+    });
+}
+
+function showLightModal() {
+    const modal = document.getElementById('light-modal');
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    
+    // 隱藏折線圖區塊和轉型預估區塊
+    const chartSection = document.querySelector('.chart-section');
+    const transformationSection = document.querySelector('.transformation-section');
+    if (chartSection) chartSection.style.display = 'none';
+    if (transformationSection) transformationSection.style.display = 'none';
+    
+    // 初始化光照分佈圖表
+    renderLightDistributionChart();
+    // 更新光照效率狀態
+    updateLightEfficiencyStatus();
+}
+
+function hideLightModal() {
+    const modal = document.getElementById('light-modal');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    
+    // 恢復顯示折線圖區塊和轉型預估區塊
+    const chartSection = document.querySelector('.chart-section');
+    const transformationSection = document.querySelector('.transformation-section');
+    if (chartSection) chartSection.style.display = '';
+    if (transformationSection) transformationSection.style.display = '';
+    
+    // 銷毀圖表
+    if (lightDistributionChartInstance) {
+        lightDistributionChartInstance.destroy();
+        lightDistributionChartInstance = null;
+    }
+}
+
+function renderLightDistributionChart() {
+    try {
+        const canvas = document.getElementById('lightDistributionChart');
+        if (!canvas) {
+            console.error('找不到 lightDistributionChart canvas 元素');
+            return;
+        }
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            console.error('無法取得 lightDistributionChart canvas context');
+            return;
+        }
+        
+        // 模擬早中晚光照強度數據
+        const timeLabels = ['早上 6:00', '早上 9:00', '中午 12:00', '下午 3:00', '下午 6:00'];
+        const lightIntensities = [15000, 35000, 65000, 45000, 20000];
+        
+        if (lightDistributionChartInstance) lightDistributionChartInstance.destroy();
+        lightDistributionChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: timeLabels,
+                datasets: [{
+                    label: '光照強度 (lux)',
+                    data: lightIntensities,
+                    backgroundColor: [
+                        'rgba(255, 193, 7, 0.8)',   // 早上 - 黃色
+                        'rgba(255, 152, 0, 0.8)',   // 上午 - 橙色
+                        'rgba(244, 67, 54, 0.8)',   // 中午 - 紅色（過強）
+                        'rgba(255, 152, 0, 0.8)',   // 下午 - 橙色
+                        'rgba(255, 193, 7, 0.8)'    // 傍晚 - 黃色
+                    ],
+                    borderColor: [
+                        '#FFC107',
+                        '#FF9800',
+                        '#F44336',
+                        '#FF9800',
+                        '#FFC107'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#FF9800',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            label: ctx => `光照強度: ${ctx.parsed.y.toLocaleString()} lux`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(0,0,0,0.08)' },
+                        ticks: { color: '#666', font: { size: 14 } }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: 80000,
+                        grid: { color: 'rgba(0,0,0,0.08)' },
+                        ticks: {
+                            color: '#666', font: { size: 14 },
+                            callback: v => (v / 1000).toFixed(0) + 'k'
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('光照分佈圖表初始化錯誤:', error);
+        showErrorMessage('光照分佈圖表載入失敗');
+    }
+}
+
+function updateLightEfficiencyStatus() {
+    // 目前光照強度（取中午的數據）
+    const current = 65000; // 中午光照強度
+    const valueSpan = document.getElementById('modal-current-light');
+    const efficiencySpan = document.getElementById('modal-light-efficiency');
+    
+    valueSpan.textContent = current.toLocaleString() + ' lux';
+    
+    // 判斷光照效率
+    if (current < 20000) {
+        efficiencySpan.textContent = '不足';
+        efficiencySpan.className = 'light-efficiency insufficient';
+    } else if (current > 50000) {
+        efficiencySpan.textContent = '過強';
+        efficiencySpan.className = 'light-efficiency excessive';
+    } else {
+        efficiencySpan.textContent = '適中';
+        efficiencySpan.className = 'light-efficiency optimal';
+    }
+}
+
+function initCO2Modal() {
+    // 使用更精確的選擇器，選擇第四個卡片（CO₂ 濃度卡片）
+    const cards = document.querySelectorAll('.overview-cards .card');
+    const co2Card = cards[3]; // 第四個卡片是 CO₂ 濃度卡片
+    const modal = document.getElementById('co2-modal');
+    
+    // 檢查必要元素是否存在
+    if (!co2Card) {
+        console.error('找不到 CO₂ 濃度卡片元素');
+        return;
+    }
+    
+    if (!modal) {
+        console.error('找不到 CO₂ modal 元素');
+        return;
+    }
+    
+    const overlay = modal.querySelector('.modal-overlay');
+    const closeBtn = document.getElementById('co2-modal-close');
+    
+    if (!overlay) {
+        console.error('找不到 CO₂ modal overlay 元素');
+        return;
+    }
+    
+    if (!closeBtn) {
+        console.error('找不到 CO₂ modal 關閉按鈕');
+        return;
+    }
+
+    // 點擊卡片開啟 modal
+    co2Card.addEventListener('click', function(e) {
+        // 避免與卡片動畫衝突
+        setTimeout(() => {
+            showCO2Modal();
+        }, 120);
+    });
+    // 點擊遮罩或關閉按鈕關閉 modal
+    overlay.addEventListener('click', hideCO2Modal);
+    closeBtn.addEventListener('click', hideCO2Modal);
+    // ESC 鍵關閉
+    document.addEventListener('keydown', function(e) {
+        if (modal.classList.contains('show') && (e.key === 'Escape' || e.key === 'Esc')) {
+            hideCO2Modal();
+        }
+    });
+}
+
+function showCO2Modal() {
+    const modal = document.getElementById('co2-modal');
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    
+    // 隱藏折線圖區塊和轉型預估區塊
+    const chartSection = document.querySelector('.chart-section');
+    const transformationSection = document.querySelector('.transformation-section');
+    if (chartSection) chartSection.style.display = 'none';
+    if (transformationSection) transformationSection.style.display = 'none';
+    
+    // 初始化 CO₂ 濃度趨勢圖表
+    renderCO2TrendChart();
+    // 更新 CO₂ 濃度狀態
+    updateCO2ConcentrationStatus();
+}
+
+function hideCO2Modal() {
+    const modal = document.getElementById('co2-modal');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    
+    // 恢復顯示折線圖區塊和轉型預估區塊
+    const chartSection = document.querySelector('.chart-section');
+    const transformationSection = document.querySelector('.transformation-section');
+    if (chartSection) chartSection.style.display = '';
+    if (transformationSection) transformationSection.style.display = '';
+    
+    // 銷毀圖表
+    if (co2TrendChartInstance) {
+        co2TrendChartInstance.destroy();
+        co2TrendChartInstance = null;
+    }
+}
+
+function renderCO2TrendChart() {
+    try {
+        const canvas = document.getElementById('co2TrendChart');
+        if (!canvas) {
+            console.error('找不到 co2TrendChart canvas 元素');
+            return;
+        }
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            console.error('無法取得 co2TrendChart canvas context');
+            return;
+        }
+        
+        // 模擬過去7天 CO₂ 濃度數據
+        const today = new Date();
+        const dates = [];
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - i);
+            dates.push(date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' }));
+        }
+        // 模擬數據（有機農業環境的 CO₂ 濃度變化）
+        const co2Levels = [380, 375, 370, 365, 370, 375, 370];
+        
+        if (co2TrendChartInstance) co2TrendChartInstance.destroy();
+        co2TrendChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'CO₂ 濃度 (ppm)',
+                    data: co2Levels,
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76,175,80,0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#4CAF50',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#4CAF50',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            label: ctx => `CO₂ 濃度: ${ctx.parsed.y} ppm`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(0,0,0,0.08)' },
+                        ticks: { color: '#666', font: { size: 14 } }
+                    },
+                    y: {
+                        min: 350, max: 450,
+                        grid: { color: 'rgba(0,0,0,0.08)' },
+                        ticks: {
+                            color: '#666', font: { size: 14 },
+                            callback: v => v + ' ppm'
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('CO₂ 濃度趨勢圖表初始化錯誤:', error);
+        showErrorMessage('CO₂ 濃度趨勢圖表載入失敗');
+    }
+}
+
+function updateCO2ConcentrationStatus() {
+    // 目前 CO₂ 濃度（取模擬數據最後一筆）
+    const current = 370; // ppm
+    const min = 400, max = 600;
+    const valueSpan = document.getElementById('modal-current-co2');
+    const statusSpan = document.getElementById('modal-co2-status');
+    
+    valueSpan.textContent = current + ' ppm';
+    
+    // 判斷 CO₂ 濃度狀態
+    if (current < min) {
+        statusSpan.textContent = '偏低';
+        statusSpan.className = 'co2-status low';
+    } else if (current > max) {
+        statusSpan.textContent = '偏高';
+        statusSpan.className = 'co2-status high';
+    } else {
+        statusSpan.textContent = '適中';
+        statusSpan.className = 'co2-status optimal';
     }
 } 

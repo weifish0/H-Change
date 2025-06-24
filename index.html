@@ -100,6 +100,27 @@
                         <div class="card-status good">充足</div>
                     </div>
                 </div>
+                <!-- 光照 Modal -->
+                <div id="light-modal" class="modal">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <button class="modal-close" id="light-modal-close" aria-label="關閉視窗">&times;</button>
+                        <h2 class="modal-title"><i class="fas fa-sun"></i> 光照詳情</h2>
+                        <div class="modal-chart-container">
+                            <canvas id="lightDistributionChart"></canvas>
+                        </div>
+                        <div class="modal-info">
+                            <div class="light-efficiency-status">
+                                <span>目前光照強度：</span>
+                                <span id="modal-current-light" class="light-value">45,000 lux</span>
+                                <span id="modal-light-efficiency" class="light-efficiency excessive">過強</span>
+                            </div>
+                            <div class="light-tip">
+                                <strong>建議：</strong>中午光照過強，建議設置遮光網，避免曬傷葉面
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="card">
                     <div class="card-icon">
@@ -109,6 +130,28 @@
                         <h3>二氧化碳濃度</h3>
                         <div class="card-value" id="co2">420 ppm</div>
                         <div class="card-status normal">正常</div>
+                    </div>
+                </div>
+                <!-- CO₂ 濃度 Modal -->
+                <div id="co2-modal" class="modal">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <button class="modal-close" id="co2-modal-close" aria-label="關閉視窗">&times;</button>
+                        <h2 class="modal-title"><i class="fas fa-leaf"></i> CO₂ 濃度詳情</h2>
+                        <div class="modal-chart-container">
+                            <canvas id="co2TrendChart"></canvas>
+                        </div>
+                        <div class="modal-info">
+                            <div class="co2-concentration-status">
+                                <span>目前濃度：</span>
+                                <span id="modal-current-co2" class="co2-value">370 ppm</span>
+                                <span>（建議範圍 <span class="co2-range">400-600 ppm</span>）</span>
+                                <span id="modal-co2-status" class="co2-status low">偏低</span>
+                            </div>
+                            <div class="co2-note">
+                                有機農業通常伴隨 CO₂ 濃度改善，有助於提升作物碳吸收效率
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

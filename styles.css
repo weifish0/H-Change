@@ -560,4 +560,114 @@ canvas {
     border-radius: 8px;
     border-left: 4px solid #4CAF50;
     line-height: 1.5;
+}
+
+.light-efficiency-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.light-value {
+    font-weight: bold;
+    color: #FF9800;
+    font-size: 1.2rem;
+}
+
+.light-efficiency {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.light-efficiency.insufficient {
+    background: #fff3e0;
+    color: #f57c00;
+    border: 1px solid #f57c00;
+}
+
+.light-efficiency.optimal {
+    background: #e8f5e8;
+    color: #388e3c;
+    border: 1px solid #388e3c;
+}
+
+.light-efficiency.excessive {
+    background: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+}
+
+.light-tip {
+    color: #d32f2f;
+    font-size: 1rem;
+    background: #ffebee;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #d32f2f;
+    line-height: 1.5;
+}
+
+.co2-concentration-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.co2-value {
+    font-weight: bold;
+    color: #4CAF50;
+    font-size: 1.2rem;
+}
+
+.co2-range {
+    color: #8D6E63;
+    font-weight: 500;
+}
+
+.co2-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.co2-status.low {
+    background: #fff3e0;
+    color: #f57c00;
+    border: 1px solid #f57c00;
+}
+
+.co2-status.optimal {
+    background: #e8f5e8;
+    color: #388e3c;
+    border: 1px solid #388e3c;
+}
+
+.co2-status.high {
+    background: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+}
+
+.co2-note {
+    color: #4CAF50;
+    font-size: 1rem;
+    background: #e8f5e8;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+    line-height: 1.5;
+    font-style: italic;
 } 
