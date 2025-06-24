@@ -62,7 +62,67 @@ function showErrorMessage(message) {
     }, 5000);
 }
 
-// 初始化氣溫折線圖
+// 全域變數保存最新資料
+let sensorData = null;
+
+// 讀取 JSON 並更新畫面
+async function fetchAndUpdateData() {
+    try {
+        const res = await fetch('public/data.json?_=' + Date.now());
+        if (!res.ok) throw new Error('資料讀取失敗');
+        sensorData = await res.json();
+        updateSensorData();
+        updateAllCharts();
+    } catch (e) {
+        showErrorMessage('感測器資料載入失敗');
+        console.error(e);
+    }
+}
+
+// 初始化動態數據更新
+function initDynamicData() {
+    // 每5秒自動 fetch 更新
+    setInterval(fetchAndUpdateData, 5000);
+    // 首次載入
+    fetchAndUpdateData();
+}
+
+// 更新感測器數據顯示
+function updateSensorData() {
+    if (!sensorData) return;
+    document.getElementById('soil-moisture').textContent = sensorData.soilMoisture + '%';
+    document.getElementById('temperature').textContent = sensorData.temperature + '°C';
+    document.getElementById('light').textContent = sensorData.light.toLocaleString() + ' lux';
+    document.getElementById('co2').textContent = sensorData.co2 + ' ppm';
+    updateStatusIndicators(sensorData.soilMoisture, sensorData.temperature, sensorData.light, sensorData.co2);
+}
+
+// 更新所有圖表
+function updateAllCharts() {
+    // 只在圖表已初始化時才更新
+    if (window.temperatureChartInstance) {
+        window.temperatureChartInstance.destroy();
+        window.temperatureChartInstance = null;
+        initTemperatureChart();
+    }
+    if (soilMoistureChartInstance) {
+        renderSoilMoistureChart();
+        updateModalMoistureStatus();
+    }
+    if (temperatureDetailChartInstance) {
+        renderTemperatureDetailChart();
+    }
+    if (lightDistributionChartInstance) {
+        renderLightDistributionChart();
+        updateLightEfficiencyStatus();
+    }
+    if (co2TrendChartInstance) {
+        renderCO2TrendChart();
+        updateCO2ConcentrationStatus();
+    }
+}
+
+// 修改氣溫折線圖初始化，使用 sensorData
 function initTemperatureChart() {
     try {
         const canvas = document.getElementById('temperatureChart');
@@ -70,13 +130,11 @@ function initTemperatureChart() {
             console.error('找不到 temperatureChart canvas 元素');
             return;
         }
-        
         const ctx = canvas.getContext('2d');
         if (!ctx) {
             console.error('無法取得 canvas context');
             return;
         }
-        
         // 生成最近7天的日期
         const dates = [];
         const today = new Date();
@@ -85,11 +143,9 @@ function initTemperatureChart() {
             date.setDate(today.getDate() - i);
             dates.push(date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' }));
         }
-        
-        // 模擬氣溫數據（花蓮地區的典型氣溫變化）
-        const temperatureData = [22, 24, 26, 25, 23, 24, 24];
-        
-        new Chart(ctx, {
+        // 用 sensorData 或預設
+        const temperatureData = sensorData && sensorData.history ? sensorData.history.temperature : [22, 24, 26, 25, 23, 24, 24];
+        window.temperatureChartInstance = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: dates,
@@ -112,9 +168,7 @@ function initTemperatureChart() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: false
-                    },
+                    legend: { display: false },
                     tooltip: {
                         backgroundColor: 'rgba(0, 0, 0, 0.8)',
                         titleColor: '#fff',
@@ -132,80 +186,28 @@ function initTemperatureChart() {
                 },
                 scales: {
                     x: {
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: '#666',
-                            font: {
-                                size: 12
-                            }
-                        }
+                        grid: { color: 'rgba(0, 0, 0, 0.1)', drawBorder: false },
+                        ticks: { color: '#666', font: { size: 12 } }
                     },
                     y: {
                         beginAtZero: false,
                         min: 15,
                         max: 35,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)',
-                            drawBorder: false
-                        },
+                        grid: { color: 'rgba(0, 0, 0, 0.1)', drawBorder: false },
                         ticks: {
-                            color: '#666',
-                            font: {
-                                size: 12
-                            },
-                            callback: function(value) {
-                                return value + '°C';
-                            }
+                            color: '#666', font: { size: 12 },
+                            callback: function(value) { return value + '°C'; }
                         }
                     }
                 },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
-                },
-                elements: {
-                    point: {
-                        hoverBackgroundColor: '#45a049'
-                    }
-                }
+                interaction: { intersect: false, mode: 'index' },
+                elements: { point: { hoverBackgroundColor: '#45a049' } }
             }
         });
     } catch (error) {
         console.error('氣溫圖表初始化錯誤:', error);
         showErrorMessage('氣溫圖表載入失敗');
     }
-}
-
-// 初始化動態數據更新
-function initDynamicData() {
-    // 模擬實時數據更新
-    setInterval(() => {
-        updateSensorData();
-    }, 5000); // 每5秒更新一次
-    
-    // 初始化數據
-    updateSensorData();
-}
-
-// 更新感測器數據
-function updateSensorData() {
-    // 模擬真實的感測器數據變化
-    const soilMoisture = Math.floor(Math.random() * 20) + 60; // 60-80%
-    const temperature = (Math.random() * 6 + 20).toFixed(1); // 20-26°C
-    const light = Math.floor(Math.random() * 10000) + 40000; // 40000-50000 lux
-    const co2 = Math.floor(Math.random() * 50) + 400; // 400-450 ppm
-    
-    // 更新顯示
-    document.getElementById('soil-moisture').textContent = soilMoisture + '%';
-    document.getElementById('temperature').textContent = temperature + '°C';
-    document.getElementById('light').textContent = light.toLocaleString() + ' lux';
-    document.getElementById('co2').textContent = co2 + ' ppm';
-    
-    // 更新狀態指示器
-    updateStatusIndicators(soilMoisture, temperature, light, co2);
 }
 
 // 更新狀態指示器
@@ -581,14 +583,12 @@ function renderSoilMoistureChart() {
             console.error('找不到 soilMoistureChart canvas 元素');
             return;
         }
-        
         const ctx = canvas.getContext('2d');
         if (!ctx) {
             console.error('無法取得 soilMoistureChart canvas context');
             return;
         }
-        
-        // 模擬過去7天土壤濕度資料
+        // 生成最近7天的日期
         const today = new Date();
         const dates = [];
         for (let i = 6; i >= 0; i--) {
@@ -596,8 +596,8 @@ function renderSoilMoistureChart() {
             date.setDate(today.getDate() - i);
             dates.push(date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' }));
         }
-        // 模擬數據（可根據實際需求調整）
-        const moistures = [42, 45, 47, 44, 41, 39, 40];
+        // 用 sensorData 或預設
+        const moistures = sensorData && sensorData.history ? sensorData.history.soilMoisture : [42, 45, 47, 44, 41, 39, 40];
         if (soilMoistureChartInstance) soilMoistureChartInstance.destroy();
         soilMoistureChartInstance = new Chart(ctx, {
             type: 'line',
@@ -801,14 +801,12 @@ function renderTemperatureDetailChart() {
             console.error('找不到 temperatureDetailChart canvas 元素');
             return;
         }
-        
         const ctx = canvas.getContext('2d');
         if (!ctx) {
             console.error('無法取得 temperatureDetailChart canvas context');
             return;
         }
-        
-        // 模擬過去7天氣溫資料
+        // 生成最近7天的日期
         const today = new Date();
         const dates = [];
         for (let i = 6; i >= 0; i--) {
@@ -816,8 +814,8 @@ function renderTemperatureDetailChart() {
             date.setDate(today.getDate() - i);
             dates.push(date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' }));
         }
-        // 模擬數據（花蓮地區的典型氣溫變化，包含日夜溫差）
-        const temperatures = [22, 26, 28, 25, 24, 27, 24];
+        // 用 sensorData 或預設
+        const temperatures = sensorData && sensorData.history ? sensorData.history.temperature : [22, 26, 28, 25, 24, 27, 24];
         if (temperatureDetailChartInstance) temperatureDetailChartInstance.destroy();
         temperatureDetailChartInstance = new Chart(ctx, {
             type: 'line',
@@ -1003,17 +1001,15 @@ function renderLightDistributionChart() {
             console.error('找不到 lightDistributionChart canvas 元素');
             return;
         }
-        
         const ctx = canvas.getContext('2d');
         if (!ctx) {
             console.error('無法取得 lightDistributionChart canvas context');
             return;
         }
-        
-        // 模擬早中晚光照強度數據
+        // 時間標籤
         const timeLabels = ['早上 6:00', '早上 9:00', '中午 12:00', '下午 3:00', '下午 6:00'];
-        const lightIntensities = [15000, 35000, 65000, 45000, 20000];
-        
+        // 用 sensorData 或預設
+        const lightIntensities = sensorData && sensorData.history ? sensorData.history.light : [15000, 35000, 65000, 45000, 20000];
         if (lightDistributionChartInstance) lightDistributionChartInstance.destroy();
         lightDistributionChartInstance = new Chart(ctx, {
             type: 'bar',
@@ -1228,14 +1224,12 @@ function renderCO2TrendChart() {
             console.error('找不到 co2TrendChart canvas 元素');
             return;
         }
-        
         const ctx = canvas.getContext('2d');
         if (!ctx) {
             console.error('無法取得 co2TrendChart canvas context');
             return;
         }
-        
-        // 模擬過去7天 CO₂ 濃度數據
+        // 生成最近7天的日期
         const today = new Date();
         const dates = [];
         for (let i = 6; i >= 0; i--) {
@@ -1243,9 +1237,8 @@ function renderCO2TrendChart() {
             date.setDate(today.getDate() - i);
             dates.push(date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' }));
         }
-        // 模擬數據（有機農業環境的 CO₂ 濃度變化）
-        const co2Levels = [380, 375, 370, 365, 370, 375, 370];
-        
+        // 用 sensorData 或預設
+        const co2Levels = sensorData && sensorData.history ? sensorData.history.co2 : [380, 375, 370, 365, 370, 375, 370];
         if (co2TrendChartInstance) co2TrendChartInstance.destroy();
         co2TrendChartInstance = new Chart(ctx, {
             type: 'line',

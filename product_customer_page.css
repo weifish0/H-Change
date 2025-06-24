@@ -1,0 +1,351 @@
+body {
+  margin: 0;
+  font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+  background: #FAF3E0;
+  color: #333;
+}
+
+/* Hero 區塊 */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: url('https://cw-image-resizer.cwg.tw/resize/uri/https%3A%2F%2Fcdn-smiletaiwan.cw.com.tw%2Farticle%2F202209%2Farticle-63241f299ac46.jpg/?w=1600&format=webp') center center/cover no-repeat;
+  filter: brightness(0.6);
+  z-index: 1;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  width: 100%;
+  padding: 0 24px;
+}
+.hero-content h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 4px 24px rgba(76,175,80,0.25);
+}
+.hero-content p {
+  font-size: 1.3rem;
+  color: #A5FFB0;
+  letter-spacing: 1px;
+  margin-bottom: 0;
+}
+
+/* 故事區塊 */
+.story-section {
+  background: #FAF3E0;
+  padding: 60px 0;
+  display: flex;
+  justify-content: center;
+}
+.story-card {
+  display: flex;
+  background: #fffbe9;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(141,110,99,0.08);
+  overflow: hidden;
+  max-width: 900px;
+  width: 90vw;
+  align-items: center;
+}
+.story-img img {
+  width: 320px;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.story-text {
+  padding: 36px 32px;
+  flex: 1;
+}
+.story-text h2 {
+  color: #8D6E63;
+  font-size: 1.7rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+.story-text p {
+  font-size: 1.15rem;
+  color: #4CAF50;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* 企業贊助區塊 */
+.sponsor-section {
+  background: #fff;
+  padding: 60px 0 40px 0;
+  display: flex;
+  justify-content: center;
+}
+.sponsor-content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  max-width: 900px;
+  width: 90vw;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(76,175,80,0.08);
+  padding: 32px 36px;
+}
+.sponsor-logo img {
+  width: 120px;
+  height: 60px;
+  object-fit: contain;
+  background: #FAF3E0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(76,175,80,0.08);
+}
+.sponsor-text h2 {
+  color: #4CAF50;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+.sponsor-text p {
+  color: #333;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* CTA 區塊 */
+.cta-section {
+  background: #4CAF50;
+  padding: 60px 0 80px 0;
+  display: flex;
+  justify-content: center;
+}
+.cta-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(76,175,80,0.12);
+  padding: 36px 32px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  max-width: 600px;
+  width: 90vw;
+  flex-wrap: wrap;
+}
+.cta-qr {
+  width: 160px;
+  height: 160px;
+  border-radius: 12px;
+  background: #FAF3E0;
+  box-shadow: 0 2px 8px rgba(141,110,99,0.08);
+}
+.cta-info {
+  flex: 1;
+  min-width: 200px;
+}
+.cta-info p {
+  font-size: 1.1rem;
+  color: #8D6E63;
+  margin-bottom: 18px;
+  line-height: 1.7;
+}
+.cta-btn {
+  display: inline-block;
+  background: #4CAF50;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 14px 36px;
+  border-radius: 30px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(76,175,80,0.12);
+  transition: background 0.2s, box-shadow 0.2s;
+  letter-spacing: 1px;
+}
+.cta-btn:hover {
+  background: #388e3c;
+  box-shadow: 0 4px 16px rgba(76,175,80,0.18);
+}
+
+/* 響應式設計 */
+@media (max-width: 900px) {
+  .story-card, .sponsor-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 24px 12px;
+  }
+  .story-img img, .sponsor-logo img {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+  }
+  .story-text, .sponsor-text {
+    padding: 24px 0 0 0;
+  }
+}
+@media (max-width: 600px) {
+  .hero-content h1 {
+    font-size: 1.5rem;
+  }
+  .hero-content p {
+    font-size: 1rem;
+  }
+  .story-section, .sponsor-section, .cta-section {
+    padding: 32px 0 32px 0;
+  }
+  .story-card, .sponsor-content, .cta-card {
+    flex-direction: column;
+    padding: 16px 6px;
+    gap: 16px;
+    border-radius: 10px;
+  }
+  .cta-qr {
+    width: 120px;
+    height: 120px;
+  }
+  .cta-btn {
+    font-size: 1rem;
+    padding: 12px 24px;
+  }
+}
+
+/* 一粒米的旅程時間軸 */
+.rice-journey-section {
+  background: #FAF3E0;
+  padding: 56px 0 48px 0;
+  text-align: center;
+}
+.rice-journey-title {
+  color: #4CAF50;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 36px;
+  letter-spacing: 2px;
+}
+.rice-journey-timeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 100vw;
+  overflow-x: auto;
+}
+.rice-journey-arrow {
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(76,175,80,0.10);
+  color: #4CAF50;
+  width: 44px;
+  height: 44px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rice-journey-arrow:active {
+  background: #E8F5E9;
+}
+.rice-journey-steps-wrapper {
+  overflow: hidden;
+  width: 1200px;
+  max-width: 95vw;
+}
+.rice-journey-steps {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(.4,1.4,.6,1);
+  gap: 48px;
+}
+.rice-journey-step {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(76,175,80,0.10);
+  min-width: 320px;
+  max-width: 380px;
+  flex: 0 0 350px;
+  padding: 48px 24px 36px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.5;
+  transform: scale(0.92);
+  transition: opacity 0.4s, transform 0.4s;
+  pointer-events: none;
+}
+.rice-journey-step.active {
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(76,175,80,0.18);
+  pointer-events: auto;
+  z-index: 2;
+}
+.rice-journey-icon img {
+  width: 300px;
+  height: 300px;
+  border-radius: 24px;
+  background: #E8F5E9;
+  box-shadow: 0 2px 8px rgba(76,175,80,0.08);
+  margin-bottom: 32px;
+}
+.rice-journey-label {
+  color: #4CAF50;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+.rice-journey-desc {
+  color: #8D6E63;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  min-height: 60px;
+}
+@media (max-width: 900px) {
+  .rice-journey-steps-wrapper {
+    width: 98vw;
+    max-width: 98vw;
+  }
+  .rice-journey-steps {
+    gap: 18px;
+  }
+}
+@media (max-width: 600px) {
+  .rice-journey-section {
+    padding: 32px 0 24px 0;
+  }
+  .rice-journey-title {
+    font-size: 1.3rem;
+    margin-bottom: 18px;
+  }
+  .rice-journey-steps-wrapper {
+    width: 100vw;
+    max-width: 100vw;
+  }
+  .rice-journey-step {
+    min-width: 90vw;
+    max-width: 98vw;
+    flex: 0 0 98vw;
+    padding: 18px 6px 14px 6px;
+  }
+  .rice-journey-label {
+    font-size: 1rem;
+  }
+  .rice-journey-desc {
+    font-size: 0.95rem;
+    min-height: 32px;
+  }
+} 
