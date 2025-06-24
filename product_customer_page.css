@@ -61,12 +61,23 @@ body {
   width: 90vw;
   align-items: center;
 }
-.story-img img {
+.story-img {
   width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #FAF3E0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.story-img img {
+  width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: 90%;
+  border-radius: 50%;
 }
 .story-text {
   padding: 36px 32px;
@@ -103,13 +114,25 @@ body {
   box-shadow: 0 4px 24px rgba(76,175,80,0.08);
   padding: 32px 36px;
 }
-.sponsor-logo img {
+.sponsor-logo {
   width: 120px;
-  height: 60px;
-  object-fit: contain;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
   background: #FAF3E0;
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.sponsor-logo img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
   box-shadow: 0 2px 8px rgba(76,175,80,0.08);
+  display: block;
 }
 .sponsor-text h2 {
   color: #4CAF50;
@@ -271,10 +294,10 @@ body {
     min-width: auto;
     max-width: 100%;
     flex: none;
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
-    padding: 20px 16px;
-    border-radius: 12px;
+    padding: 32px 20px;
+    border-radius: 16px;
     opacity: 1;
     transform: none;
     pointer-events: auto;
@@ -285,18 +308,18 @@ body {
     box-shadow: 0 6px 20px rgba(76,175,80,0.18);
   }
   .rice-journey-icon img {
-    width: 120px;
-    height: 120px;
-    border-radius: 16px;
-    margin-bottom: 16px;
+    width: 180px;
+    height: 180px;
+    border-radius: 20px;
+    margin-bottom: 20px;
   }
   .rice-journey-label {
-    font-size: 1.1rem;
-    margin-bottom: 8px;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
     text-align: center;
   }
   .rice-journey-desc {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     min-height: auto;
     line-height: 1.6;
     text-align: center;
@@ -306,9 +329,9 @@ body {
     padding: 0 8px;
   }
   .rice-journey-arrow {
-    width: 48px;
-    height: 48px;
-    font-size: 1.3rem;
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem;
     position: relative;
     top: 0;
   }
@@ -321,25 +344,25 @@ body {
 }
 @media (max-width: 480px) {
   .rice-journey-step {
-    width: 95%;
-    padding: 18px 12px;
+    width: 98%;
+    padding: 28px 16px;
   }
   .rice-journey-icon img {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 12px;
+    width: 500px;
+    height: 200px;
+    margin-bottom: 16px;
   }
   .rice-journey-label {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
   .rice-journey-desc {
-    font-size: 0.9rem;
+    font-size: 1rem;
     padding: 0 4px;
   }
   .rice-journey-arrow {
-    width: 44px;
-    height: 44px;
-    font-size: 1.2rem;
+    width: 52px;
+    height: 52px;
+    font-size: 1.4rem;
   }
 }
 
