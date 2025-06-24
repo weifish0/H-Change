@@ -425,9 +425,12 @@ canvas {
     height: 100vh;
     overflow: auto;
     background: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 .modal.show {
     display: block;
+    opacity: 1;
 }
 .modal-overlay {
     position: fixed;
@@ -439,12 +442,17 @@ canvas {
     height: calc(100vh + 400px);
     background: rgba(44, 62, 80, 0.45);
     z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.modal.show .modal-overlay {
+    opacity: 1;
 }
 .modal-content {
     position: fixed;
     left: 50%;
     top: 80%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.8);
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(44,62,80,0.18);
@@ -453,7 +461,12 @@ canvas {
     max-width: 95vw;
     width: 1000px;
     z-index: 2;
-    animation: fadeInUp 0.4s;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.modal.show .modal-content {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }
 .modal-title {
     font-size: 1.5rem;

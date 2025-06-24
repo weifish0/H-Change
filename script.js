@@ -422,28 +422,33 @@ function showSoilModal() {
     if (chartSection) chartSection.style.display = 'none';
     if (transformationSection) transformationSection.style.display = 'none';
     
-    // 初始化土壤濕度圖表
-    renderSoilMoistureChart();
-    // 更新目前濕度與狀態
-    updateModalMoistureStatus();
+    // 延遲初始化圖表，等待動畫完成
+    setTimeout(() => {
+        renderSoilMoistureChart();
+        updateModalMoistureStatus();
+    }, 150);
 }
 
 function hideSoilModal() {
     const modal = document.getElementById('soil-modal');
     modal.classList.remove('show');
-    document.body.style.overflow = '';
     
-    // 恢復顯示折線圖區塊和轉型預估區塊
-    const chartSection = document.querySelector('.chart-section');
-    const transformationSection = document.querySelector('.transformation-section');
-    if (chartSection) chartSection.style.display = '';
-    if (transformationSection) transformationSection.style.display = '';
-    
-    // 銷毀圖表
-    if (soilMoistureChartInstance) {
-        soilMoistureChartInstance.destroy();
-        soilMoistureChartInstance = null;
-    }
+    // 延遲恢復滾動和顯示其他區塊
+    setTimeout(() => {
+        document.body.style.overflow = '';
+        
+        // 恢復顯示折線圖區塊和轉型預估區塊
+        const chartSection = document.querySelector('.chart-section');
+        const transformationSection = document.querySelector('.transformation-section');
+        if (chartSection) chartSection.style.display = '';
+        if (transformationSection) transformationSection.style.display = '';
+        
+        // 銷毀圖表
+        if (soilMoistureChartInstance) {
+            soilMoistureChartInstance.destroy();
+            soilMoistureChartInstance = null;
+        }
+    }, 300);
 }
 
 function renderSoilMoistureChart() {
@@ -608,26 +613,32 @@ function showTemperatureModal() {
     if (chartSection) chartSection.style.display = 'none';
     if (transformationSection) transformationSection.style.display = 'none';
     
-    // 初始化氣溫詳情圖表
-    renderTemperatureDetailChart();
+    // 延遲初始化圖表，等待動畫完成
+    setTimeout(() => {
+        renderTemperatureDetailChart();
+    }, 150);
 }
 
 function hideTemperatureModal() {
     const modal = document.getElementById('temperature-modal');
     modal.classList.remove('show');
-    document.body.style.overflow = '';
     
-    // 恢復顯示折線圖區塊和轉型預估區塊
-    const chartSection = document.querySelector('.chart-section');
-    const transformationSection = document.querySelector('.transformation-section');
-    if (chartSection) chartSection.style.display = '';
-    if (transformationSection) transformationSection.style.display = '';
-    
-    // 銷毀圖表
-    if (temperatureDetailChartInstance) {
-        temperatureDetailChartInstance.destroy();
-        temperatureDetailChartInstance = null;
-    }
+    // 延遲恢復滾動和顯示其他區塊
+    setTimeout(() => {
+        document.body.style.overflow = '';
+        
+        // 恢復顯示折線圖區塊和轉型預估區塊
+        const chartSection = document.querySelector('.chart-section');
+        const transformationSection = document.querySelector('.transformation-section');
+        if (chartSection) chartSection.style.display = '';
+        if (transformationSection) transformationSection.style.display = '';
+        
+        // 銷毀圖表
+        if (temperatureDetailChartInstance) {
+            temperatureDetailChartInstance.destroy();
+            temperatureDetailChartInstance = null;
+        }
+    }, 300);
 }
 
 function renderTemperatureDetailChart() {
@@ -773,28 +784,33 @@ function showLightModal() {
     if (chartSection) chartSection.style.display = 'none';
     if (transformationSection) transformationSection.style.display = 'none';
     
-    // 初始化光照分佈圖表
-    renderLightDistributionChart();
-    // 更新光照效率狀態
-    updateLightEfficiencyStatus();
+    // 延遲初始化圖表，等待動畫完成
+    setTimeout(() => {
+        renderLightDistributionChart();
+        updateLightEfficiencyStatus();
+    }, 150);
 }
 
 function hideLightModal() {
     const modal = document.getElementById('light-modal');
     modal.classList.remove('show');
-    document.body.style.overflow = '';
     
-    // 恢復顯示折線圖區塊和轉型預估區塊
-    const chartSection = document.querySelector('.chart-section');
-    const transformationSection = document.querySelector('.transformation-section');
-    if (chartSection) chartSection.style.display = '';
-    if (transformationSection) transformationSection.style.display = '';
-    
-    // 銷毀圖表
-    if (lightDistributionChartInstance) {
-        lightDistributionChartInstance.destroy();
-        lightDistributionChartInstance = null;
-    }
+    // 延遲恢復滾動和顯示其他區塊
+    setTimeout(() => {
+        document.body.style.overflow = '';
+        
+        // 恢復顯示折線圖區塊和轉型預估區塊
+        const chartSection = document.querySelector('.chart-section');
+        const transformationSection = document.querySelector('.transformation-section');
+        if (chartSection) chartSection.style.display = '';
+        if (transformationSection) transformationSection.style.display = '';
+        
+        // 銷毀圖表
+        if (lightDistributionChartInstance) {
+            lightDistributionChartInstance.destroy();
+            lightDistributionChartInstance = null;
+        }
+    }, 300);
 }
 
 function renderLightDistributionChart() {
@@ -963,28 +979,33 @@ function showCO2Modal() {
     if (chartSection) chartSection.style.display = 'none';
     if (transformationSection) transformationSection.style.display = 'none';
     
-    // 初始化 CO₂ 濃度趨勢圖表
-    renderCO2TrendChart();
-    // 更新 CO₂ 濃度狀態
-    updateCO2ConcentrationStatus();
+    // 延遲初始化圖表，等待動畫完成
+    setTimeout(() => {
+        renderCO2TrendChart();
+        updateCO2ConcentrationStatus();
+    }, 150);
 }
 
 function hideCO2Modal() {
     const modal = document.getElementById('co2-modal');
     modal.classList.remove('show');
-    document.body.style.overflow = '';
     
-    // 恢復顯示折線圖區塊和轉型預估區塊
-    const chartSection = document.querySelector('.chart-section');
-    const transformationSection = document.querySelector('.transformation-section');
-    if (chartSection) chartSection.style.display = '';
-    if (transformationSection) transformationSection.style.display = '';
-    
-    // 銷毀圖表
-    if (co2TrendChartInstance) {
-        co2TrendChartInstance.destroy();
-        co2TrendChartInstance = null;
-    }
+    // 延遲恢復滾動和顯示其他區塊
+    setTimeout(() => {
+        document.body.style.overflow = '';
+        
+        // 恢復顯示折線圖區塊和轉型預估區塊
+        const chartSection = document.querySelector('.chart-section');
+        const transformationSection = document.querySelector('.transformation-section');
+        if (chartSection) chartSection.style.display = '';
+        if (transformationSection) transformationSection.style.display = '';
+        
+        // 銷毀圖表
+        if (co2TrendChartInstance) {
+            co2TrendChartInstance.destroy();
+            co2TrendChartInstance = null;
+        }
+    }, 300);
 }
 
 function renderCO2TrendChart() {
