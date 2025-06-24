@@ -194,6 +194,32 @@ body {
   .story-text, .sponsor-text {
     padding: 24px 0 0 0;
   }
+  .rice-journey-steps-wrapper {
+    width: 98vw;
+    max-width: 98vw;
+  }
+  .rice-journey-steps {
+    gap: 24px;
+  }
+  .rice-journey-step {
+    min-width: 280px;
+    max-width: 320px;
+    flex: 0 0 300px;
+    padding: 32px 20px 24px 20px;
+  }
+  .rice-journey-icon img {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 24px;
+  }
+  .rice-journey-label {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+  .rice-journey-desc {
+    font-size: 1rem;
+    min-height: 48px;
+  }
 }
 @media (max-width: 600px) {
   .hero-content h1 {
@@ -218,6 +244,101 @@ body {
   .cta-btn {
     font-size: 1rem;
     padding: 12px 24px;
+  }
+  .rice-journey-section {
+    padding: 24px 0 20px 0;
+  }
+  .rice-journey-title {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+  }
+  .rice-journey-timeline {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .rice-journey-steps-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+  .rice-journey-steps {
+    flex-direction: column;
+    gap: 20px;
+    transform: none !important;
+  }
+  .rice-journey-step {
+    min-width: auto;
+    max-width: 100%;
+    flex: none;
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px 16px;
+    border-radius: 12px;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    box-shadow: 0 4px 16px rgba(76,175,80,0.12);
+  }
+  .rice-journey-step.active {
+    transform: none;
+    box-shadow: 0 6px 20px rgba(76,175,80,0.18);
+  }
+  .rice-journey-icon img {
+    width: 120px;
+    height: 120px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+  }
+  .rice-journey-label {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .rice-journey-desc {
+    font-size: 0.95rem;
+    min-height: auto;
+    line-height: 1.6;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    padding: 0 8px;
+  }
+  .rice-journey-arrow {
+    width: 48px;
+    height: 48px;
+    font-size: 1.3rem;
+    position: relative;
+    top: 0;
+  }
+  .rice-journey-arrow.left {
+    order: -1;
+  }
+  .rice-journey-arrow.right {
+    order: 1;
+  }
+}
+@media (max-width: 480px) {
+  .rice-journey-step {
+    width: 95%;
+    padding: 18px 12px;
+  }
+  .rice-journey-icon img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 12px;
+  }
+  .rice-journey-label {
+    font-size: 1rem;
+  }
+  .rice-journey-desc {
+    font-size: 0.9rem;
+    padding: 0 4px;
+  }
+  .rice-journey-arrow {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
   }
 }
 
