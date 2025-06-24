@@ -66,6 +66,7 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 90%;
 }
 .story-text {
   padding: 36px 32px;
@@ -470,3 +471,208 @@ body {
     min-height: 32px;
   }
 } 
+
+
+/* 有機米產品資訊展示區塊 */
+.organic-info-section {
+  background: #FAF3E0;
+  padding: 60px 0 48px 0;
+  text-align: center;
+}
+
+.organic-info-title {
+  color: #4CAF50;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+}
+
+.organic-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.organic-info-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(76,175,80,0.08);
+  padding: 28px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.organic-info-card:nth-child(1) { animation-delay: 0.1s; }
+.organic-info-card:nth-child(2) { animation-delay: 0.2s; }
+.organic-info-card:nth-child(3) { animation-delay: 0.3s; }
+.organic-info-card:nth-child(4) { animation-delay: 0.4s; }
+.organic-info-card:nth-child(5) { animation-delay: 0.5s; }
+.organic-info-card:nth-child(6) { animation-delay: 0.6s; }
+.organic-info-card:nth-child(7) { animation-delay: 0.7s; }
+
+.organic-info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(76,175,80,0.15);
+}
+
+.organic-info-icon {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #E8F5E9;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.organic-info-content {
+  flex: 1;
+  text-align: left;
+}
+
+.organic-info-label {
+  color: #4CAF50;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.organic-info-value {
+  color: #8D6E63;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 響應式設計 */
+@media (max-width: 900px) {
+  .organic-info-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+  }
+  .organic-info-card {
+    padding: 24px 20px;
+  }
+  .organic-info-icon {
+    font-size: 2.2rem;
+    width: 56px;
+    height: 56px;
+  }
+}
+
+@media (max-width: 600px) {
+  .organic-info-section {
+    padding: 40px 0 32px 0;
+  }
+  .organic-info-title {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+  }
+  .organic-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 12px;
+  }
+  .organic-info-card {
+    padding: 16px 12px;
+    gap: 12px;
+    flex-direction: column;
+    text-align: center;
+    min-height: 120px;
+  }
+  .organic-info-icon {
+    font-size: 1.8rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+  }
+  .organic-info-content {
+    text-align: center;
+  }
+  .organic-info-label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  .organic-info-value {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+}
+@media (max-width: 480px) {
+  .organic-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 10px;
+  }
+  .organic-info-card {
+    padding: 14px 8px;
+    gap: 8px;
+    min-height: 110px;
+  }
+  .organic-info-icon {
+    font-size: 1.6rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+  }
+  .organic-info-label {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+  .organic-info-value {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+}
+@media (max-width: 360px) {
+  .organic-info-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .organic-info-card {
+    padding: 16px 12px;
+    gap: 12px;
+    min-height: auto;
+    flex-direction: row;
+    text-align: left;
+  }
+  .organic-info-icon {
+    font-size: 1.8rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    margin-bottom: 0;
+  }
+  .organic-info-content {
+    text-align: left;
+  }
+  .organic-info-label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  .organic-info-value {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+}
