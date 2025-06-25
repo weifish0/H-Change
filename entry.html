@@ -2,13 +2,18 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>儀表板入口 | 花蓮有機農地智慧平台</title>
   <meta name="description" content="花蓮有機農地智慧平台儀表板入口，快速導向農夫、企業、產品故事三大功能頁。">
   <link rel="icon" href="favicon/favicon.ico">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="entry.css">
   <style>
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+      position: relative;
+    }
     body {
       font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
       background: #f9f8f4;
@@ -28,6 +33,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      box-sizing: border-box;
     }
     .entry-title {
       font-size: 2rem;
@@ -57,6 +63,8 @@
       border: 2px solid transparent;
       position: relative;
       min-height: 180px;
+      text-decoration: none;
+      color: inherit;
     }
     .entry-card:active {
       transform: scale(0.97);
@@ -143,7 +151,7 @@
 </head>
 <body>
   <div class="entry-container">
-    <div class="entry-title">選擇您的儀表板</div>
+    <div class="entry-title">選擇您要前往的頁面</div>
     <div class="card-list">
       <a class="entry-card" href="./">
         <div class="icon">🌾</div>
@@ -159,15 +167,51 @@
       </a>
       <a class="entry-card" href="./product_customer_page.html">
         <div class="icon">📖</div>
-        <h3>產品故事設計儀表板</h3>
+        <h3>產品故事頁面</h3>
         <p>用故事行銷，讓消費者認識每一粒米的旅程</p>
         <span class="go-btn">立即前往</span>
       </a>
     </div>
   </div>
   <script>
-    // 讓整張卡片可點擊（已用 <a> 包裹，無需額外 JS）
-    // 可加載進階互動或追蹤事件
+    // 防止縮放和滾動
+    document.addEventListener('touchmove', function(e) {
+      if (e.scale !== 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    
+    // 防止雙擊縮放
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+    
+    // 防止左右滑動
+    document.addEventListener('touchstart', function(e) {
+      const touch = e.touches[0];
+      const startX = touch.clientX;
+      const startY = touch.clientY;
+      
+      function handleTouchMove(e) {
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - startX;
+        const deltaY = touch.clientY - startY;
+        
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+          e.preventDefault();
+        }
+      }
+      
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', function() {
+        document.removeEventListener('touchmove', handleTouchMove);
+      }, { once: true });
+    });
   </script>
 </body>
 </html> 
