@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>○○企業企業贊助花蓮有機米轉型故事</title>
   <link rel="stylesheet" href="product_customer_page.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -18,47 +18,100 @@
       <p>在○○企業的支持下，我們走向友善土地的未來</p>
     </div>
   </section>
+
   <!-- 一粒米的旅程時間軸 -->
   <section class="rice-journey-section">
     <h2 class="rice-journey-title">一粒米的旅程</h2>
-    <div class="rice-journey-timeline">
-      <button class="rice-journey-arrow left" aria-label="上一站"><i class="fas fa-chevron-left"></i></button>
-      <div class="rice-journey-steps-wrapper">
-        <div class="rice-journey-steps">
-          <!-- 每個步驟 -->
-          <div class="rice-journey-step active">
-            <div class="rice-journey-icon"><img src="./public/travel1.png" alt="土地整理"></div>
-            <div class="rice-journey-label">土地整理</div>
-            <div class="rice-journey-desc">一塊土地，第一次準備迎接有機耕種。</div>
+    <div class="rice-journey-timeline-container">
+      <!-- 時間線 -->
+      <div class="timeline-line"></div>
+      
+      <!-- 旅程步驟卡片 -->
+      <div class="journey-steps">
+        <div class="journey-step">
+          <div class="step-timeline-dot"></div>
+          <div class="step-card">
+            <div class="step-time">2024年3月15日</div>
+            <div class="step-image">
+              <img src="./public/travel1.png" alt="土地整理">
+            </div>
+            <div class="step-content">
+              <h3 class="step-title">土地整理</h3>
+              <p class="step-description">一塊土地，第一次準備迎接有機耕種。</p>
+            </div>
           </div>
-          <div class="rice-journey-step">
-            <div class="rice-journey-icon"><img src="./public/travel2.png" alt="播種"></div>
-            <div class="rice-journey-label">播種</div>
-            <div class="rice-journey-desc">一顆顆米種被溫柔地埋進田裡，等待發芽。</div>
+        </div>
+
+        <div class="journey-step">
+          <div class="step-timeline-dot"></div>
+          <div class="step-card">
+            <div class="step-time">2024年4月8日</div>
+            <div class="step-image">
+              <img src="./public/travel2.png" alt="播種">
+            </div>
+            <div class="step-content">
+              <h3 class="step-title">播種</h3>
+              <p class="step-description">一顆顆米種被溫柔地埋進田裡，等待發芽。</p>
+            </div>
           </div>
-          <div class="rice-journey-step">
-            <div class="rice-journey-icon"><img src="./public/travel3.png" alt="成長"></div>
-            <div class="rice-journey-label">成長</div>
-            <div class="rice-journey-desc">風吹日曬中，它們悄悄地長高了。</div>
+        </div>
+
+        <div class="journey-step">
+          <div class="step-timeline-dot"></div>
+          <div class="step-card">
+            <div class="step-time">2024年5月20日</div>
+            <div class="step-image">
+              <img src="./public/travel3.png" alt="成長">
+            </div>
+            <div class="step-content">
+              <h3 class="step-title">成長</h3>
+              <p class="step-description">風吹日曬中，它們悄悄地長高了。</p>
+            </div>
           </div>
-          <div class="rice-journey-step">
-            <div class="rice-journey-icon"><img src="./public/travel4.png" alt="有機轉型"></div>
-            <div class="rice-journey-label">有機轉型</div>
-            <div class="rice-journey-desc">我們選擇不用農藥，讓土地回歸純淨。</div>
+        </div>
+
+        <div class="journey-step">
+          <div class="step-timeline-dot"></div>
+          <div class="step-card">
+            <div class="step-time">2024年7月12日</div>
+            <div class="step-image">
+              <img src="./public/travel4.png" alt="有機轉型">
+            </div>
+            <div class="step-content">
+              <h3 class="step-title">有機轉型</h3>
+              <p class="step-description">我們選擇不用農藥，讓土地回歸純淨。</p>
+            </div>
           </div>
-          <div class="rice-journey-step">
-            <div class="rice-journey-icon"><img src="./public/travel5.png" alt="收成"></div>
-            <div class="rice-journey-label">收成</div>
-            <div class="rice-journey-desc">這是農民最期待的時刻，一把把收割下的，是安心的糧食。</div>
+        </div>
+
+        <div class="journey-step">
+          <div class="step-timeline-dot"></div>
+          <div class="step-card">
+            <div class="step-time">2024年9月28日</div>
+            <div class="step-image">
+              <img src="./public/travel5.png" alt="收成">
+            </div>
+            <div class="step-content">
+              <h3 class="step-title">收成</h3>
+              <p class="step-description">這是農民最期待的時刻，一把把收割下的，是安心的糧食。</p>
+            </div>
           </div>
-          <div class="rice-journey-step">
-            <div class="rice-journey-icon"><img src="./public/travel6.png" alt="包裝出貨"></div>
-            <div class="rice-journey-label">包裝出貨</div>
-            <div class="rice-journey-desc">從田地出發，這一粒米正踏上前往你餐桌的旅程。</div>
+        </div>
+
+        <div class="journey-step">
+          <div class="step-timeline-dot"></div>
+          <div class="step-card">
+            <div class="step-time">2024年11月15日</div>
+            <div class="step-image">
+              <img src="./public/travel6.png" alt="包裝出貨">
+            </div>
+            <div class="step-content">
+              <h3 class="step-title">包裝出貨</h3>
+              <p class="step-description">從田地出發，這一粒米正踏上前往你餐桌的旅程。</p>
+            </div>
           </div>
         </div>
       </div>
-      <button class="rice-journey-arrow right" aria-label="下一站"><i class="fas fa-chevron-right"></i></button>
     </div>
   </section>
 
@@ -79,7 +132,7 @@
         <div class="organic-info-icon">📅</div>
         <div class="organic-info-content">
           <h3 class="organic-info-label">收成時間</h3>
-          <p class="organic-info-value">2024 年 12 月</p>
+          <p class="organic-info-value">2024 年 9 月 28 日</p>
         </div>
       </div>
 
