@@ -347,8 +347,8 @@ canvas {
     }
     
     .overview-cards {
-        grid-template-columns: 1fr;
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
     }
     
     .transformation-cards {
@@ -382,6 +382,11 @@ canvas {
         font-size: 1.2rem;
     }
     
+    .overview-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
     .card-value, .transformation-value {
         font-size: 1.5rem;
     }
@@ -393,6 +398,23 @@ canvas {
     
     .card-icon i, .transformation-icon i {
         font-size: 1.2rem;
+    }
+    
+    .card {
+        padding: 15px;
+    }
+    
+    .card-content h3 {
+        font-size: 1rem;
+    }
+    
+    .card-value {
+        font-size: 1.3rem;
+    }
+    
+    .card-status {
+        font-size: 0.8rem;
+        padding: 3px 8px;
     }
     
     /* 手機版 Modal 優化 */
@@ -438,7 +460,6 @@ canvas {
     
     .modal.show .modal-content {
         transform: translateY(0) scale(1);
-        box-shadow: 0 -2px 30px rgba(0, 0, 0, 0.2);
     }
     
     .modal-title {

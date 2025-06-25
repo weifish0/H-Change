@@ -371,6 +371,7 @@ body {
   background: #FAF3E0;
   padding: 56px 0 48px 0;
   text-align: center;
+  min-height: 100vh;
 }
 .rice-journey-title {
   color: #4CAF50;
